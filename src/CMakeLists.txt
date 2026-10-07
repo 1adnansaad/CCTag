@@ -253,7 +253,7 @@ if(CCTAG_VISUAL_DEBUG)
 endif(CCTAG_VISUAL_DEBUG)
 if(CCTAG_EIGEN_MEMORY_ALIGNMENT)
   # If user enabled Eigen alignment assumptions, then allocations should be with appropriate
-  # alignment. Fortunately this is fixed in C++17. While we can't upgrade to C++17 just yet, some
+  # alignment. Fortunately this is fixed in C++17. If CCTAG_CXX_STANDARD is set below 17, some
   # compilers support overaligned allocation feature with a separate flag.
   # See https://eigen.tuxfamily.org/dox/group__TopicUnalignedArrayAssert.html
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 7.1)

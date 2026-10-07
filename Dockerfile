@@ -1,5 +1,5 @@
-ARG CUDA_TAG=10.2
-ARG OS_TAG=18.04
+ARG CUDA_TAG=11.8.0
+ARG OS_TAG=20.04
 FROM alicevision/cctag-deps:cuda${CUDA_TAG}-ubuntu${OS_TAG}
 LABEL maintainer="AliceVision Team alicevision@googlegroups.com"
 

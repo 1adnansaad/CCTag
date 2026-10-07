@@ -11,7 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [cmake] Switch to C++17 standard by default, as required by CUDA 13 (CUDA 9 and 10 need `-DCCTAG_CXX_STANDARD=14`)
+
 ### Fixed
+
+- [cmake] `CCTAG_CXX_STANDARD` passed on the command line (e.g. by the AliceVision superbuild) was silently ignored
+- [cmake] Default CUDA architectures for CUDA 13, and non-Tegra aarch64 (Grace, DGX Spark) support
 
 ### Removed
 

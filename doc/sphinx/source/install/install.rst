@@ -90,11 +90,11 @@ Required tools:
 
 * CMake >= 3.14 to build the code
 * Git
-* C/C++ compiler supporting the C++14 standard (gcc >= 5, clang >= 3.4, msvc >= 2017)
+* C/C++ compiler supporting the C++17 standard (gcc >= 7, clang >= 5, msvc >= 2017)
 
 Optional tool:
 
-* CUDA >= 9.0
+* CUDA >= 11.0 (CUDA 9 and 10 need ``-DCCTAG_CXX_STANDARD=14``)
 
 
 .. note::

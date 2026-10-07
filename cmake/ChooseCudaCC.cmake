@@ -56,16 +56,16 @@ function(chooseCudaCC SUPPORTED_CC SUPPORTED_GENCODE_FLAGS)
 
   #
   # Create a list of possible CCs for each host processor.
-  # This may require tuning: CUDA cards exist in AIX machines with POWER CPUs,
-  # it is possible that non-Tegra ARM systems exist as well.
+  # This may require tuning: CUDA cards exist in AIX machines with POWER CPUs.
+  # aarch64 is both Tegra and non-Tegra (Grace, DGX Spark), so it gets both lists.
   # For now, this is my best guess.
   #
   set(TEGRA_SUPPORTED_PROCESSORS "armv71;arm;aarch64")
-  set(OTHER_SUPPORTED_PROCESSORS "i686;x86_64;AMD64")
+  set(OTHER_SUPPORTED_PROCESSORS "i686;x86_64;AMD64;aarch64")
 
   set(CC_LIST_BY_SYSTEM_PROCESSOR "")
   if(CMAKE_SYSTEM_PROCESSOR IN_LIST OTHER_SUPPORTED_PROCESSORS)
-    list(APPEND CC_LIST_BY_SYSTEM_PROCESSOR "20;21;30;35;50;52;60;61;70;75;80;86;89;90")
+    list(APPEND CC_LIST_BY_SYSTEM_PROCESSOR "20;21;30;35;50;52;60;61;70;75;80;86;89;90;100;120;121")
   endif()
   if(CMAKE_SYSTEM_PROCESSOR IN_LIST TEGRA_SUPPORTED_PROCESSORS)
     list(APPEND CC_LIST_BY_SYSTEM_PROCESSOR "32;53;62;72")
@@ -79,8 +79,11 @@ function(chooseCudaCC SUPPORTED_CC SUPPORTED_GENCODE_FLAGS)
   # Shortening the lists saves a lot of compile time.
   #
 
-  # The current version last time this list was updated was CUDA 12.1.
-  if(CUDA_VERSION VERSION_GREATER_EQUAL 12)
+  # The current version last time this list was updated was CUDA 13.0.
+  if(CUDA_VERSION VERSION_GREATER_EQUAL 13)
+    set(CUDA_MIN_CC 75)
+    set(CUDA_MAX_CC 121)
+  elseif(CUDA_VERSION VERSION_GREATER_EQUAL 12)
     set(CUDA_MIN_CC 50)
     set(CUDA_MAX_CC 90)
   elseif(CUDA_VERSION VERSION_GREATER_EQUAL 11.8)
@@ -123,6 +126,8 @@ function(chooseCudaCC SUPPORTED_CC SUPPORTED_GENCODE_FLAGS)
   # Add all requested CUDA CCs to the command line for offline compilation
   #
   set(GENCODE_FLAGS "")
+  # ponytail: string sort puts 100/120/121 before 75, so the JIT PTX below is compute_90, not the highest CC.
+  # Native code for every CC is still built; use COMPARE NATURAL once cmake_minimum_required >= 3.18.
   list(SORT CC_LIST)
   foreach(CC_VERSION ${CC_LIST})
     list(APPEND GENCODE_FLAGS "-gencode;arch=compute_${CC_VERSION},code=sm_${CC_VERSION}")
